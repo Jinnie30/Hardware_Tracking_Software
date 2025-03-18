@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[4]:
 
 
 import os
 print(os.listdir())  # List files in the current directory
 
 
-# In[2]:
+# In[5]:
 
 
 #!jupyter nbconvert --to script Station_Parameters.ipynb
-#!jupyter nbconvert --to script Satellite_TLE_File.ipynb
+get_ipython().system('jupyter nbconvert --to script Satellite_TLE_File.ipynb')
 #!jupyter nbconvert --to script Tracking_Intervals_Inputs.ipynb
 #!jupyter nbconvert --to script Link_Inputs.ipynb
 
 
-# In[1]:
+# In[17]:
 
 
 import sys
@@ -49,59 +49,46 @@ class FileIO:
 
     def load_all_inputs(self):
         """
-        Reads and loads all input files.
+        Reads and loads all input files, including station parameters, satellite TLEs, 
+        tracking intervals, and link budgets.
         """
-        print("\n📡 Loading Station Parameters...")
+    
+        print("\n Loading Station Parameters...")
         self.station = Station(self.station_file)
         print(self.station)
-
-        print("\n🛰️ Fetching Satellite TLE Data...")
-        self.satellites = Satellite()
+    
+        #print("\n Fetching Satellite Data...")
+    
+        # Reading the TLE file
+        tlefile=r'C:\Users\jinni\Hardware_Tracking_Software\gps-ops.txt'
+        with open(tlefile, 'r') as TLEfile:
+         lines = TLEfile.readlines()
+    
+        self.satellites = []  # Store multiple satellites
+        i = 0
+        while i < len(lines) - 2:  # Process each satellite (3 lines per entry)
+            name = lines[i].strip()   # Satellite name
+            tle1 = lines[i + 1].strip()  # TLE Line 1
+            tle2 = lines[i + 2].strip()  # TLE Line 2
+            self.satellites.append(Satellite(name, tle1, tle2))  
+            i += 3  # Move to the next satellite
+    
+        print(f"Loaded {len(self.satellites)} satellites.")
         print(self.satellites)
-
-        print("\n⏳ Loading Tracking Interval...")
+    
+        print("\n Loading Tracking Interval...")
         self.tracking = TrackingInterval(self.tracking_file)
         print(self.tracking)
-
-        print("\n📶 Loading Link Budget Inputs...")
+    
+        print("\n Loading Link Budget Inputs...")
         self.link_budget = LinkBudget(self.link_file)
         print(self.link_budget)
+
 
 # Example Usage
 if __name__ == "__main__":
     print("🚀 Initializing FileIO...")
     file_io = FileIO()
-
-
-# In[9]:
-
-
-from skyfield.api import Topos, load
-from datetime import datetime
-
-# Load the TLE data (replace this with actual TLE data from your file)
-satellite = load.tle_file('gps-ops.txt')[0]  # Select the first satellite from TLE file
-
-# Set the station location (latitude, longitude)
-station = Topos(latitude_degrees=45.9555033333, longitude_degrees=281.9269597222)
-
-# Set the observation time
-timescale = load.timescale()
-t = timescale.utc(2025, 3, 18, 12, 0)  # Set a specific date and time
-
-# Compute the position of the satellite at time t
-astrometric = satellite.at(t)
-
-# Get the subpoint (latitude and longitude of the satellite's location on Earth)
-subpoint = astrometric.subpoint()
-
-# Now, we compute the azimuth and elevation from the station's location
-alt, az, d = station.at(t).observe(satellite).apparent().altaz()
-
-# Print the results
-print(f"At time {t.utc_iso()}:")
-print(f"Satellite Position: Latitude {subpoint.latitude.degrees}, Longitude {subpoint.longitude.degrees}")
-print(f"Azimuth: {az.degrees}°, Elevation: {alt.degrees}°")
 
 
 # In[ ]:
