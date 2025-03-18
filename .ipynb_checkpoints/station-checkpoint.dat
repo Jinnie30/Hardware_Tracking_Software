@@ -1,0 +1,17 @@
+ARO
+45.95550333333333  # Latitude
+281.9269597222222  # Longitude
+260.42  # Altitude
+-4.0  # UTC Offset
+46  # Diameter (m)
+0.4  # Focal ratio
+18.3  # Focal length (m)
+0.32  # Surface accuracy (solid) (cm)
+0.64  # Surface accuracy (mesh) (cm)
+3  # Beamwidth (arcmin)
+10  # AZ speed max (deg/min)
+10  # EL speed max (deg/min)
+9  # EL min limit (deg)
+89  # EL max limit (deg)
+1  # Number of AZ/EL horizon points
+0.0 9.0 89.0  # Azimuth, Min Elev, Max Elev
