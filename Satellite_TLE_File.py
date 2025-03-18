@@ -4,69 +4,83 @@
 # In[15]:
 
 
-import requests 
-class SatelliteTLE:
-    """
-    Fetches and stores satellite TLE data from Celestrak.
-    """
-    TLE_URL = "http://celestrak.org/NORAD/elements/gps-ops.txt"
+# Import required libraries
+import os
 
-    def __init__(self):
-        self.tle_data = []
-        self.fetch_tle_data()
-
-    def fetch_tle_data(self):
+class Satellite:
+    def __init__(self, name, tle1, tle2):
         """
-        Fetches the latest GPS TLE data from Celestrak.
+        Initializes a GPS satellite object with TLE data.
+        
+        :param name: Name of the satellite
+        :param tle1: First line of TLE
+        :param tle2: Second line of TLE
         """
-        try:
-            response = requests.get(self.TLE_URL)
-            response.raise_for_status()
-            lines = response.text.strip().split("\n")
+        self.name = name.strip()
+        self.tle1 = tle1.strip()
+        self.tle2 = tle2.strip()
+        self.ssc_number = self.tle1.split()[1]  # Extract SSC Number
+        self.epoch = self.tle1.split()[3]  # Extract reference epoch
+        self.mean_anomaly = self.tle2.split()[6]  # Extract Mean Anomaly
+        self.inclination = self.tle2.split()[2]  # Extract Inclination
+        self.raan = self.tle2.split()[3]  # Extract Right Ascension of Ascending Node (RAAN)
 
-            for i in range(0, len(lines), 3):
-                if i + 2 < len(lines):
-                    self.tle_data.append((lines[i], lines[i+1], lines[i+2]))
-
-        except requests.RequestException as e:
-            print(f"Error fetching TLE data: {e}")
-    def list_tles(self):
-            """
-            Prints the fetched TLEs in a readable format.
-            """
-            if not self.tle_data:
-                print("No TLE data available.")
-                return
-    
-            print(f"Fetched {len(self.tle_data)} satellites from Celestrak:\n")
-            for sat_name, line1, line2 in self.tle_data:
-                print(f"📡 Satellite: {sat_name}")
-                print(f"   {line1}")
-                print(f"   {line2}\n")
     def __str__(self):
-        return f"Fetched {len(self.tle_data)} satellites from Celestrak."
+        """
+        String representation of the Satellite object, formatted like your expected output.
+        """
+        return (f"\nSatellite name: {self.name}\n"
+                f"SSC Number: {self.ssc_number}\n"
+                f"Reference Epoch: {self.epoch}\n"
+                f"Mean anomaly: {self.mean_anomaly}\n"
+                f"Inclination: {self.inclination}°\n"
+                f"RAAN: {self.raan}°\n"
+                f"TLE data:\n{self.tle1}\n{self.tle2}\n")
+
+def load_gps_tle(tle_file):
+    """
+    Reads the GPS TLE file and returns a list of Satellite objects.
+
+    :param tle_file: Path to the TLE file
+    :return: List of Satellite objects
+    """
+    if not os.path.exists(tle_file):
+        raise FileNotFoundError(f"Error: TLE file '{tle_file}' not found.")
+
+    satellites = []
+    with open(tle_file, 'r') as file:
+        lines = file.readlines()
+
+    i = 0
+    while i < len(lines) - 2:
+        name = lines[i].strip()
+        tle1 = lines[i + 1].strip()
+        tle2 = lines[i + 2].strip()
+        satellites.append(Satellite(name, tle1, tle2))
+        i += 3  # Move to next satellite
+
+    return satellites
 
 
 # In[16]:
 
 
-tle = SatelliteTLE()
-print(tle)
+# Provide the correct file path
+tlefile = r'C:\Users\jinni\Hardware_Tracking_Software\gps-ops.txt'
 
+try:
+    # Load GPS satellites from the file
+    gps_satellites = load_gps_tle(tlefile)
 
-# In[17]:
+    # Print total satellites loaded
+    print(f"Read in {len(gps_satellites)} satellites")
 
+    # Print details of each satellite
+    for sat in gps_satellites:
+        print(sat)
 
-if __name__ == "__main__":
-    tle = SatelliteTLE()
-    print(tle)  # Prints summary
-    tle.list_tles()  # Prints all fetched TLEs
-
-
-# In[11]:
-
-
-#from FileIO import SatelliteTLE
+except Exception as e:
+    print(f"Error: {e}")
 
 
 # In[ ]:
