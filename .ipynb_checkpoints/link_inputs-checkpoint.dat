@@ -1,6 +1,6 @@
-1575.42  # Frequency (MHz)
-0.50  # Antenna Efficiency (η)
-46  # Antenna Diameter (m)
-2  # Bandwidth (MHz)
-56  # Receiver Gain (dB)
-200  # Receiver Noise Temperature (K)
+Frequency band center, F_cnt MHz: 1575.42
+Antenna efficiency, AE: 0.50
+Antenna diameter, D m: 46
+Bandwidth max, B MHz: 2
+RCV gain, RG dB: 56
+RCV noise temperature, RNT deg K: 200

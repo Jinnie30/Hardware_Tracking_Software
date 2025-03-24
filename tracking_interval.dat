@@ -1,3 +1,5 @@
-2025-03-17 12:00:00  # Start time (UTC)
-3600  # Duration in seconds (1 hour)
-60  # Time step in seconds (1 minute)
+Tracking start date/time: 2024-04-21-14:00:00
+Tracking stop date/time: 2024-04-21-16:00:00
+Output time step (sec): 60.00
+(Optional) Elevation increment (deg): 0.50
+(Optional) Azimuth increment (deg): 0.50

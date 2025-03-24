@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[15]:
+# In[1]:
 
 
 # Import required libraries
@@ -62,11 +62,11 @@ def load_gps_tle(tle_file):
     return satellites
 
 
-# In[16]:
+# In[4]:
 
 
 # Provide the correct file path
-tlefile = r'C:\Users\jinni\Hardware_Tracking_Software\gps-ops.txt'
+tlefile = r'C:\Users\jinnie\Hardware_Tracking_Software\gps-ops.txt'
 
 try:
     # Load GPS satellites from the file
